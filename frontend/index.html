@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI视频编辑工具</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div id="app" class="container">
+        <!-- 导航栏 -->
+        <nav class="navbar">
+            <div class="nav-brand">
+                <h1>🎬 AI视频编辑工具</h1>
+            </div>
+            <div class="nav-menu">
+                <button class="nav-btn" onclick="app.showTab('upload')">上传素材</button>
+                <button class="nav-btn" onclick="app.showTab('process')">处理视频</button>
+                <button class="nav-btn" onclick="app.showTab('history')">处理历史</button>
+                <button class="nav-btn" onclick="app.showTab('help')">帮助</button>
+            </div>
+        </nav>
+
+        <!-- 主容器 -->
+        <main class="main-content">
+            <!-- 上传标签页 -->
+            <section id="tab-upload" class="tab-content active">
+                <div class="section-title">📹 上传您的素材</div>
+                
+                <div class="upload-area">
+                    <div class="upload-card">
+                        <h3>📽️ 视频素材</h3>
+                        <div class="drop-zone" id="video-drop">
+                            <p>拖拽视频文件到这里或点击选择</p>
+                            <input type="file" id="video-input" multiple accept="video/*" hidden>
+                        </div>
+                        <div id="video-list" class="file-list"></div>
+                    </div>
+
+                    <div class="upload-card">
+                        <h3>🎵 音乐/音频</h3>
+                        <div class="drop-zone" id="audio-drop">
+                            <p>拖拽音频文件到这里或点击选择</p>
+                            <input type="file" id="audio-input" accept="audio/*" hidden>
+                        </div>
+                        <div id="audio-list" class="file-list"></div>
+                    </div>
+
+                    <div class="upload-card">
+                        <h3>📄 脚本/文字</h3>
+                        <textarea id="script-text" placeholder="粘贴或输入您的视频脚本...\n\n例如:\n场景1：介绍产品\n这是一个很棒的产品...\n\n场景2：演示功能\n让我展示它如何工作..." rows="8"></textarea>
+                        <button class="btn btn-primary" onclick="app.saveScript()">保存脚本</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 处理标签页 -->
+            <section id="tab-process" class="tab-content">
+                <div class="section-title">⚙️ 视频处理设置</div>
+                
+                <div class="process-container">
+                    <div class="settings-panel">
+                        <div class="setting-group">
+                            <label>语言设置</label>
+                            <select id="language" onchange="app.updateSettings()">
+                                <option value="zh-CN">简体中文</option>
+                                <option value="zh-TW">繁體中文</option>
+                                <option value="en-US">English</option>
+                                <option value="ja-JP">日本語</option>
+                                <option value="ko-KR">한국어</option>
+                            </select>
+                        </div>
+
+                        <div class="setting-group">
+                            <label>配音速度</label>
+                            <input type="range" id="voice-speed" min="0.5" max="2.0" step="0.1" value="1.0" onchange="app.updateSettings()">
+                            <span id="speed-display">1.0x</span>
+                        </div>
+
+                        <div class="setting-group">
+                            <label>字幕位置</label>
+                            <select id="subtitle-position" onchange="app.updateSettings()">
+                                <option value="top">顶部</option>
+                                <option value="center">居中</option>
+                                <option value="bottom" selected>底部</option>
+                            </select>
+                        </div>
+
+                        <div class="setting-group">
+                            <label>输出分辨率</label>
+                            <select id="resolution" onchange="app.updateSettings()">
+                                <option value="1280x720">720P</option>
+                                <option value="1920x1080" selected>1080P</option>
+                                <option value="3840x2160">4K</option>
+                            </select>
+                        </div>
+
+                        <div class="setting-group">
+                            <label>输出格式</label>
+                            <select id="output-format" onchange="app.updateSettings()">
+                                <option value="mp4" selected>MP4</option>
+                                <option value="mov">MOV</option>
+                                <option value="avi">AVI</option>
+                            </select>
+                        </div>
+
+                        <button class="btn btn-success btn-large" onclick="app.startProcessing()">🚀 开始处理</button>
+                    </div>
+
+                    <div class="preview-panel">
+                        <div class="preview-title">处理预览</div>
+                        <div id="preview-info" class="preview-info">
+                            <p>已上传���素材将在此显示</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 历史标签页 -->
+            <section id="tab-history" class="tab-content">
+                <div class="section-title">📋 处理历史</div>
+                
+                <div class="history-container">
+                    <div id="history-list" class="history-list">
+                        <p class="empty-message">暂无处理历史</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 帮助标签页 -->
+            <section id="tab-help" class="tab-content">
+                <div class="section-title">❓ 使用帮助</div>
+                
+                <div class="help-container">
+                    <div class="help-section">
+                        <h3>如何开始？</h3>
+                        <ol>
+                            <li>在「上传素材」页面上传您的视频、音乐和脚本</li>
+                            <li>进入「处理视频」页面配置处理参数</li>
+                            <li>点击「开始处理」按钮，系统会自动组装视频</li>
+                            <li>等待处理完成，即可下载最终视频</li>
+                        </ol>
+                    </div>
+
+                    <div class="help-section">
+                        <h3>支持的文件格式</h3>
+                        <p><strong>视频：</strong> MP4, MOV, AVI, MKV, FLV, WMV</p>
+                        <p><strong>音频：</strong> MP3, WAV, AAC, FLAC, M4A</p>
+                        <p><strong>脚本：</strong> TXT, SRT, JSON</p>
+                    </div>
+
+                    <div class="help-section">
+                        <h3>处理时间预计</h3>
+                        <ul>
+                            <li>短视频 (1-3分钟)：5-10分钟</li>
+                            <li>中等视频 (3-10分钟)：15-30分钟</li>
+                            <li>长视频 (10分钟+)：可能需要1小时+</li>
+                        </ul>
+                        <p>注：实际时间取决于您的硬件配置和文件大小</p>
+                    </div>
+
+                    <div class="help-section">
+                        <h3>常见问题</h3>
+                        <p><strong>Q: 支持多个视频片段吗？</strong><br>
+                        A: 是的，您可以上传多个视频片段，系统会根据脚本自动组合它们。</p>
+                        
+                        <p><strong>Q: 可以自定义字幕样式吗？</strong><br>
+                        A: 目前支持位置和基本样式调整，高级定制功能敬请期待。</p>
+                        
+                        <p><strong>Q: 如何获得最好的处理效果？</strong><br>
+                        A: 建议使用清晰的原始素材，避免过度压缩的视频。</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- 进度条 -->
+        <div id="progress-modal" class="modal hidden">
+            <div class="modal-content">
+                <h2>处理中...</h2>
+                <div class="progress-bar">
+                    <div id="progress-fill" class="progress-fill" style="width: 0%"></div>
+                </div>
+                <p id="progress-text">准备处理...</p>
+                <div class="progress-steps">
+                    <div class="step" id="step-audio">🔊 处理音频</div>
+                    <div class="step" id="step-subtitle">📝 生成字幕</div>
+                    <div class="step" id="step-edit">✂️ 自动剪辑</div>
+                    <div class="step" id="step-encode">📦 编码输出</div>
+                </div>
+                <button class="btn btn-danger" onclick="app.cancelProcessing()" id="cancel-btn">取消处理</button>
+            </div>
+        </div>
+
+        <!-- 通知 -->
+        <div id="notification" class="notification hidden"></div>
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
