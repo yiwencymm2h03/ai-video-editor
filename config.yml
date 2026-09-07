@@ -1,0 +1,69 @@
+# AI 视频编辑工具配置文件
+
+app:
+  name: "AI Video Editor"
+  version: "1.0.0"
+  debug: true
+  port: 5000
+  host: "0.0.0.0"
+
+# 视频处理配置
+video:
+  max_file_size: 5000  # MB
+  supported_formats:
+    - "mp4"
+    - "mov"
+    - "avi"
+    - "mkv"
+  output_format: "mp4"
+  output_quality: "high"  # low, medium, high
+  fps: 30
+  resolution: "1920x1080"
+
+# 音频配置
+audio:
+  sample_rate: 44100
+  channels: 2
+  bitrate: "192k"
+  tts_engine: "coqui"  # coqui, bark, google
+  default_language: "zh-CN"
+  voice_speed: 1.0
+
+# 字幕配置
+subtitles:
+  enable: true
+  font_size: 24
+  font_family: "Arial"
+  color: "#FFFFFF"
+  background_color: "#000000"
+  position: "bottom"  # top, bottom, center
+  opacity: 0.8
+
+# 转场配置
+transitions:
+  enable: true
+  default_duration: 0.5  # seconds
+  types:
+    - "fade"
+    - "slide"
+    - "wipe"
+    - "crossfade"
+
+# 存储配置
+storage:
+  upload_dir: "./uploads"
+  output_dir: "./outputs"
+  temp_dir: "./temp"
+  cleanup_days: 7  # 自动清理天数
+
+# AI模型配置
+model:
+  tts_model: "tts_models/zh/baker/glow-tts"
+  stt_model: "base"  # whisper模型
+  enable_gpu: true
+  batch_size: 8
+
+# 处理队列配置
+queue:
+  max_workers: 4
+  timeout: 3600  # seconds
